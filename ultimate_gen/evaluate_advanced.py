@@ -293,5 +293,22 @@ def main():
         f.write("\n".join(report_lines))
     print(f"\nReport saved to: {os.path.join(RESULTS_DIR, 'metrics_report.txt')}")
 
+    # --- JSON EXPORT ---
+    import json
+    metrics_data = {
+        "Validity": validity,
+        "Uniqueness": uniqueness,
+        "Novelty": novelty,
+        "QED_Mean": float(np.mean(gen_qed)) if len(gen_qed) > 0 else 0.0,
+        "LogP_Mean": float(np.mean(gen_logp)) if len(gen_logp) > 0 else 0.0,
+        "Similarity_Mean": float(avg_sim) if 'avg_sim' in locals() else 0.0,
+        "Similarity_Max": float(max_sim) if 'max_sim' in locals() else 0.0
+    }
+    
+    json_path = os.path.join(RESULTS_DIR, "metrics.json")
+    with open(json_path, "w") as f:
+        json.dump(metrics_data, f, indent=4)
+    print(f"Metrics JSON saved to {json_path}")
+
 if __name__ == "__main__":
     main()

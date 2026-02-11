@@ -12,6 +12,12 @@ import math
 import os
 
 # --- NEW IMPORTS ---
+import sys
+import os
+sys.path.insert(0, os.getcwd())
+import model
+print(f"DEBUG: Loaded model from {model.__file__}")
+print(f"DEBUG: dir(model): {dir(model)}")
 from model import ConditionalFusionModel, ConditionalDiffusion
 from utils import construct_mol_robust, ATOM_MAP
 
@@ -286,6 +292,23 @@ def main():
         except: pass
     else:
         print("Aucune molécule valide générée.")
+
+    # --- JSON EXPORT ---
+    metrics_data = {
+        "Validity": validity,
+        "Uniqueness": uniqueness,
+        "Novelty": novelty,
+        "QED_Mean": float(np.mean(gen_qed)) if gen_qed else 0.0,
+        "LogP_Mean": float(np.mean(gen_logp)) if gen_logp else 0.0,
+        "Similarity_Mean": float(np.mean(similarities)) if 'similarities' in locals() and similarities else 0.0,
+        "Similarity_Max": float(np.max(similarities)) if 'similarities' in locals() and similarities else 0.0
+    }
+    
+    json_path = os.path.join(RESULTS_DIR, "metrics.json")
+    import json
+    with open(json_path, "w") as f:
+        json.dump(metrics_data, f, indent=4)
+    print(f"Métriques JSON sauvegardées dans {json_path}")
 
 if __name__ == "__main__":
     main()

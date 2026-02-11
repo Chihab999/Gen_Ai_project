@@ -4,13 +4,16 @@ RÉSULTATS DE L'AUDIT AVANCÉ (V.U.N)
 
 1. Métriques de Génération :
    - Validity   : 100.00% (200/200)
-   - Uniqueness : 99.50% (sur les valides)
+   - Uniqueness : 98.00% (sur les valides)
    - Novelty    : 100.00% (vs QM9 sample)
 
 2. Propriétés Chimiques (Moyennes) :
-   - QED (Généré) : 0.3517 vs (QM9) : 0.4631
-   - LogP (Généré) : 0.1532 vs (QM9) : 0.1946
+   - QED (Généré) : 0.3859 vs (QM9) : 0.4608
+   - LogP (Généré) : 0.5672 vs (QM9) : 0.1572
 
 3. Analyse d'Overfitting (Score de Similarité Tanimoto) :
-   - Similarité Moyenne avec QM9 : 0.1396
-   - Similarité Max absolue    : 0.2195
+   - Similarité Moyenne avec QM9 : 0.1416
+   - Similarité Max absolue    : 0.2143
+
+>>> INTERPRÉTATION <<<
+[ALERTE] UNDERFITTING PROBABLE. Le modèle génère des structures valides mais chimiquement éloignées de QM9 (bruit).
