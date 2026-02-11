@@ -1,0 +1,48 @@
+# Environments
+venv/
+env/
+.env
+
+# Python
+__pycache__/
+*.pyc
+
+# Data & Datasets
+data/
+QM9/
+raw/
+processed/
+*.sdf
+*.csv
+*.txt
+!requirements.txt
+!metrics_report.txt
+
+# Model Checkpoints & Weights
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.pkl
+
+# IDE & Config
+.vscode/
+.idea/
+
+# LaTeX Intermediate Files
+*.aux
+*.log
+*.out
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.xml
+
+# Project specific exclusions (Large results)
+evaluation_results/*.png
+!evaluation_results/metrics_report.txt
+# (Exception: we keep assets usually, but user said 'no data')
+# We will keep the 'assets' folder specifically created for the report

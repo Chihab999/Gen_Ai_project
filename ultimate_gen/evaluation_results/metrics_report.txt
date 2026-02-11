@@ -1,0 +1,16 @@
+==================================================
+ULTIMATE GEN - ADVANCED AUDIT RESULTS
+==================================================
+
+1. Generative Metrics:
+   - Validity   : 100.00% (200/200)
+   - Uniqueness : 100.00%
+   - Novelty    : 100.00%
+
+2. Chemical Properties (Averages):
+   - QED (Generated) : 0.3108 vs (QM9) : 0.4613
+   - LogP (Generated) : -0.2404 vs (QM9) : 0.1623
+
+3. Overfitting Analysis (Tanimoto Similarity):
+   - Avg Similarity to QM9 : 0.1479
+   - Max Similarity (Copy?) : 0.2250

@@ -1,0 +1,16 @@
+==================================================
+GRAPH GAN VAE - AUDIT RESULTS (V.U.N)
+==================================================
+
+1. Generative Metrics:
+   - Validity   : 100.00% (200/200)
+   - Uniqueness : 98.00%
+   - Novelty    : 100.00%
+
+2. Chemical Properties (Averages):
+   - QED (Generated) : 0.4870 vs (QM9) : 0.4577
+   - LogP (Generated) : 0.6942 vs (QM9) : 0.0710
+
+3. Overfitting Analysis:
+   - Avg Similarity : 0.1337
+   - Max Similarity : 0.2128

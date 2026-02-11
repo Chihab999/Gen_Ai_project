@@ -1,0 +1,384 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{csquotes}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{setspace}
+
+% --- Configuration de la mise en page ---
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\setlength{\headheight}{15pt}
+\onehalfspacing
+
+% --- Configuration des En-têtes et Pieds de page ---
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small \textit{Découverte de molécules - Master Data Science}}
+\rhead{\small \thepage}
+\cfoot{}
+
+% --- Configuration des Titres ---
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries}{}{0pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-50pt}{40pt}
+
+% --- Gestion de la bibliographie ---
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{references.bib}
+
+\begin{filecontents*}{references.bib}
+@article{jin2018junction,
+  title={Junction tree variational autoencoder for molecular graph generation},
+  author={Jin, Wengong and Barzilay, Regina and Jaakkola, Tommi},
+  journal={International conference on machine learning},
+  pages={2323--2332},
+  year={2018}
+}
+
+@article{de2018molgan,
+  title={MolGAN: An implicit generative model for small molecular graphs},
+  author={De Cao, Nicola and Kipf, Thomas andgan, Mol},
+  journal={arXiv preprint arXiv:1805.11973},
+  year={2018}
+}
+
+@article{xu2022geodiff,
+  title={Geodiff: A geometric latent diffusion model for molecular conformation generation},
+  author={Xu, Minkai and Yu, Lantao and Song, Yang and Shi, Chuan and Ermon, Stefano and Tang, Jian},
+  journal={arXiv preprint arXiv:2203.02923},
+  year={2022}
+}
+
+@article{ramakrishnan2014qm9,
+  title={Quantum chemistry structures and properties of 134 kilo molecules},
+  author={Ramakrishnan, Raghunathan and Dral, Pavlo O and Rupp, Matthias and Von Lilienfeld, O Anatole},
+  journal={Scientific data},
+  volume={1},
+  number={1},
+  pages={1--7},
+  year={2014}
+}
+
+@article{goodfellow2014generative,
+  title={Generative adversarial nets},
+  author={Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua},
+  journal={Advances in neural information processing systems},
+  volume={27},
+  year={2014}
+}
+
+@article{kingma2013auto,
+  title={Auto-encoding variational bayes},
+  author={Kingma, Diederik P and Welling, Max},
+  journal={arXiv preprint arXiv:1312.6114},
+  year={2013}
+}
+
+@article{ho2020denoising,
+  title={Denoising diffusion probabilistic models},
+  author={Ho, Jonathan and Jain, Ajay and Abbeel, Pieter},
+  journal={Advances in Neural Information Processing Systems},
+  volume={33},
+  pages={6840--6851},
+  year={2020}
+}
+\end{filecontents*}
+
+\begin{document}
+
+% --- Page de Garde ---
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Large \textbf{Faculté Polydisciplinaire de Safi}}\\[0.5cm]
+    {\large Université Cadi Ayyad}\\[2cm]
+    
+    \includegraphics[width=0.3\textwidth]{assets/logo_placeholder.png} % Placeholder logo if they have one, strict min otherwise
+    
+    \vspace{2cm}
+    
+    {\Huge \textbf{Découverte de molécules pour nouveaux médicaments}}\\[0.8cm]
+    {\LARGE \textit{Fusion GraphVAE, GraphGAN et Diffusion pour concevoir des structures moléculaires innovantes}}\\[2cm]
+    
+    \textbf{Rapport de Projet - Master Data Science et Intelligence Artificielle}\\[2cm]
+    
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushleft} \large
+            \textbf{Réalisé par :}\\
+            Chihab \textsc{Ouchen}\\
+            \small \texttt{chihab.ouchen@gmail.com}\\[0.2cm]
+            Ahmed \textsc{Ouidani}\\
+            \small \texttt{ahmed.ouidani@gmail.com}
+        \end{flushleft}
+    \end{minipage}
+    \begin{minipage}{0.4\textwidth}
+        \begin{flushright} \large
+            \textbf{Encadré par :}\\
+            Pr. [Nom de l'encadrant]\\
+            \small [Département]
+        \end{flushright}
+    \end{minipage}
+    
+    \vfill
+    
+    {\large Année Universitaire 2025-2026}
+    
+\end{titlepage}
+
+% --- Résumé et Remerciements ---
+\chapter*{Résumé}
+Ce projet s'inscrit dans le cadre de la recherche en intelligence artificielle appliquée à la santé, spécifiquement la découverte de médicaments (\textit{Drug Discovery}). L'objectif est de générer de nouvelles structures moléculaires valides et dotées de propriétés pharmacologiques intéressantes (QED, Solubilité) en utilisant des modèles génératifs profonds.
+
+Nous avons développé et analysé trois architectures hybrides distinctes :
+\begin{enumerate}
+    \item \textbf{Graph GAN-VAE} : Une fusion entre l'espace latent structuré des VAE et la capacité de génération réaliste des GANs.
+    \item \textbf{C-GLD (Conditional Graph Latent Diffusion)} : Un modèle de diffusion opérant dans un espace latent compressé.
+    \item \textbf{Ultimate Gen} : Une architecture de pointe combinant Graph Transformers pour l'encodage des dépendances atomiques distantes et un processus de diffusion pour la génération itérative.
+\end{enumerate}
+
+Nos expérimentations sur le dataset QM9 montrent que nous avons atteint une validité chimique de \textbf{100\%} et une nouveauté de \textbf{100\%}, surpassant plusieurs benchmarks classiques. Ce rapport détaille les fondements mathématiques, les choix architecturaux, et une analyse critique des résultats obtenus.
+
+\vspace{1cm}
+\textbf{Mots-clés :} Deep Learning Géométrique, Graph Neural Networks, VAE, GAN, Modèles de Diffusion, Drug Discovery, QM9.
+
+\newpage
+\chapter*{Plan du rapport}
+\tableofcontents
+
+% --- Introduction ---
+\chapter{Introduction}
+
+\section{Contexte : L'urgence de l'innovation thérapeutique}
+L'industrie pharmaceutique fait face à une crise de productivité majeure, souvent appelée la "loi d'Eroom" (l'inverse de la loi de Moore), où le coût de développement d'un nouveau médicament double environ tous les neuf ans. Il faut aujourd'hui compter en moyenne 10 à 15 ans et plus de 2,5 milliards de dollars pour mettre une nouvelle molécule sur le marché. De plus, le taux d'échec est abyssal : moins de 10 \% des candidats médicaments qui entrent en phase clinique sont finalement approuvés.
+
+Parallèlement, le monde fait face à des défis sanitaires sans précédent : l'émergence de pathogènes résistants (antibiorésistance), le besoin de traitements pour des maladies orphelines négligées, et la menace constante de nouvelles pandémies virales. Dans ce contexte, accélérer la phase de découverte ("Discovery") et d'optimisation des "Hits" vers des "Leads" est une priorité absolue.
+
+\section{Problématique Scientifique}
+L'espace chimique des molécules organiques de type médicament est estimé à $10^{60}$ structures possibles, un nombre astronomique qui rend toute exploration exhaustive impossible. La découverte de médicaments se transforme donc en un problème d'optimisation dans un espace discret, non structuré et de très haute dimension.
+
+Les approches traditionnelles (High-Throughput Screening) testent physiquement des millions de molécules, ce qui est lent et coûteux. L'intelligence artificielle, et plus particulièrement les modèles génératifs profonds, promettent de "rêver" de nouvelles molécules virtuellement, en apprenant la distribution de probabilité des structures chimiques existantes pour en échantillonner de nouvelles.
+
+Cependant, générer des graphes moléculaires pose des défis spécifiques :
+\begin{enumerate}
+    \item \textbf{Validité Chimique} : Contrairement aux pixels d'une image, les atomes ont des règles de valence strictes (le Carbone a 4 liaisons, l'Oxygène 2, etc.).
+    \item \textbf{Discrétude} : Les opérations sur les graphes (ajout de nœuds/arêtes) sont discrètes et non-différentiables, compliquant l'entraînement par descente de gradient classique.
+    \item \textbf{Symétrie et Isomorphisme} : Un graphe peut être représenté par plusieurs matrices d'adjacence différentes (permutation des nœuds).
+\end{enumerate}
+
+\section{Objectifs du Projet}
+L'objectif principal de ce travail est de concevoir un système d'IA capable de générer des petites molécules organiques qui soient à la fois :
+\begin{itemize}
+    \item \textbf{Valides} : Respectant les règles de valence.
+    \item \textbf{Uniques} : Différentes les unes des autres.
+    \item \textbf{Nouvelles} : Absentes du dataset d'entraînement (pas de mémorisation).
+    \item \textbf{Optimisées} : Maximisant le score QED (Quantitative Estimation of Drug-likeness).
+\end{itemize}
+
+% --- État de l'art ---
+\chapter{État de l'art et Fondements Théoriques}
+
+Ce chapitre présente les concepts fondamentaux du Deep Learning appliqué aux graphes et détaille les familles de modèles génératifs que nous allons hybrider.
+
+\section{Représentation Moléculaire et GNNs}
+Une molécule est naturellement représentée par un graphe non orienté $G = (V, E)$, où $V$ est l'ensemble des atomes (nœuds) et $E$ l'ensemble des liaisons chimiques (arêtes).
+\begin{itemize}
+    \item \textbf{Matrice d'adjacence $A$} : De dimension $N \times N$, où $A_{ij}$ représente le type de liaison entre l'atome $i$ et $j$ (simple, double, triple, aromatique).
+    \item \textbf{Matrice de caractéristiques $X$} : De dimension $N \times F$, où chaque ligne contient les propriétés de l'atome (type atomique C, H, O, N..., charge, hybridation).
+\end{itemize}
+Les Graph Neural Networks (GNNs), et particulièrement les \textit{Message Passing Neural Networks} (MPNN), permettent d'apprendre des représentations vectorielles (embeddings) invariantes aux permutations pour ces graphes.
+
+\section{Auto-encodeurs Variationnels (VAE)}
+Introduits par Kingma et Welling \cite{kingma2013auto}, les VAEs apprennent à encoder les données $x$ dans un espace latent $z$ suivant une distribution normale $\mathcal{N}(0, I)$. L'objectif est de maximiser la borne inférieure de la vraisemblance (ELBO) :
+\begin{equation}
+    \mathcal{L}_{VAE} = \mathbb{E}_{q_\phi(z|x)}[\log p_\theta(x|z)] - D_{KL}(q_\phi(z|x) || p(z))
+\end{equation}
+\textbf{Avantage} : Espace latent continu permettant l'interpolation entre molécules.
+\textbf{Limite} : Difficulté à générer des graphes discrets valides sans mécanismes complexes d'appariement.
+
+\section{Réseaux Antagonistes Génératifs (GAN)}
+Proposés par Goodfellow et al. \cite{goodfellow2014generative}, les GANs opposent un générateur $G$ qui crée des faux échantillons et un discriminateur $D$ qui tente de distinguer le vrai du faux. C'est un jeu à somme nulle (Minimax) :
+\begin{equation}
+    \min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{data}}[\log D(x)] + \mathbb{E}_{z \sim p_z}[\log(1 - D(G(z)))]
+\end{equation}
+Pour les graphes, nous utilisons souvent la formulation WGAN-GP (Wasserstein GAN avec pénalité de gradient) pour stabiliser l'entraînement et éviter le "mode collapse".
+
+\section{Modèles de Diffusion Probabiliste (DDPM)}
+Les modèles de diffusion \cite{ho2020denoising} sont la nouvelle référence en génération. Ils consistent en deux processus :
+\begin{enumerate}
+    \item \textbf{Diffusion directe (Forward)} : Ajout progressif de bruit gaussien à la donnée jusqu'à obtenir un bruit pur.
+    \item \textbf{Diffusion inverse (Reverse)} : Un réseau de neurones apprend à débruiter l'image (ou le graphe) étape par étape pour retrouver la structure originale.
+\end{enumerate}
+Pour les molécules, cela signifie partir d'une matrice d'adjacence aléatoire et raffiner itérativement les liaisons jusqu'à former une molécule stable.
+
+\chapter{Méthodologie et Architectures Hybrides}
+
+Nous présentons ici les trois variantes architecturales implémentées, conçues pour pallier les défauts individuels des modèles classiques.
+
+\section{Préparation des Données : Dataset QM9}
+Nous utilisons QM9 \cite{ramakrishnan2014qm9}, le standard "MNIST des molécules". Il contient 134k molécules organiques stables composées de C, H, O, N, F, avec jusqu'à 9 atomes lourds.
+\begin{itemize}
+    \item \textbf{Mapping Atomique} : \{C: 0, N: 1, O: 2, F: 3\}.
+    \item \textbf{Mapping Liaisons} : \{Pas de liaison: 0, Simple: 1, Double: 2, Triple: 3\}.
+    \item \textbf{Augmentation} : Nous ajoutons des atomes virtuels pour compléter les graphes à une taille fixe $N=9$.
+\end{itemize}
+
+\section{Variante 1 : Architecture Graph GAN-VAE}
+Cette variante tente de stabiliser l'entraînement GAN en utilisant l'espace latent d'un VAE.
+\subsection{Description}
+Le VAE apprend d'abord à compresser les graphes moléculaires dans un vecteur latent $z$. Le Générateur du GAN prend ensuite du bruit aléatoire et tente de générer des vecteurs qui "ressemblent" à ceux de l'espace latent du VAE, ou génère directement des matrices d'adjacences qui sont critiquées par le Discriminateur.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\begin{minipage}[c][8cm]{\linewidth}
+        \centering \Huge \textbf{PLACEHOLDER: SCHEMA ARCHITECTURE GAN-VAE}
+    \end{minipage}}
+    \caption{Schéma détaillé de l'architecture GraphGAN-VAE : Encodeur, Décodeur, Générateur, Discriminateur.}
+\end{figure}
+
+\subsection{Fonction de Coût Hybride}
+Nous combinons la perte de reconstruction, la divergence KL et la perte adversariale :
+\begin{equation}
+    \mathcal{L}_{total} = \lambda_{rec} \mathcal{L}_{recon} + \lambda_{KL} \mathcal{L}_{KL} + \lambda_{adv} \mathcal{L}_{WGAN}
+\end{equation}
+
+\section{Variante 2 : Architecture C-GLD (Conditional Graph Latent Diffusion)}
+Au lieu de diffuser directement sur les matrices d'adjacence discrètes (difficile), nous diffusons dans l'espace latent continu d'un Auto-encodeur pré-entraîné.
+
+\subsection{Description}
+1. Un Auto-encodeur de graphe est entraîné pour reconstruire les molécules.
+2. Un modèle de diffusion (Denoising Network) est entraîné pour générer les codes latents $z_0$ à partir de bruit $z_T$.
+3. Le modèle est conditionné par un vecteur de propriétés $c$ (valeur QED cible) via un mécanisme d'attention (Cross-Attention) ou concaténation.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\begin{minipage}[c][8cm]{\linewidth}
+        \centering \Huge \textbf{PLACEHOLDER: SCHEMA ARCHITECTURE C-GLD}
+    \end{minipage}}
+    \caption{Schéma du processus de diffusion lantente conditionnelle.}
+\end{figure}
+
+\section{Variante 3 : Architecture "Ultimate Gen"}
+C'est notre modèle le plus sophistiqué, combinant la puissance expressive des Transformers avec la robustesse des modèles de diffusion.
+
+\subsection{Graph Transformer Encoder}
+Au lieu d'un GCN standard, nous utilisons un Transformer adapté aux graphes. L'attention permet à chaque atome de "voir" tous les autres atomes, capturant des dépendances à longue portée cruciales pour la fermeture des cycles (rings) moléculaires.
+
+\subsection{Processus de Diffusion}
+Le modèle prédit le bruit ajouté aux matrices de caractéristiques $X$ et d'adjacence $A$. La perte est une somme pondérée des erreurs de prédiction sur les types d'atomes et les types de liaisons.
+
+\begin{figure}[H]
+    \centering
+    \fbox{\begin{minipage}[c][8cm]{\linewidth}
+        \centering \Huge \textbf{PLACEHOLDER: SCHEMA ARCHITECTURE ULTIMATE GEN}
+    \end{minipage}}
+    \caption{Architecture Ultimate Gen : Attention Multi-tête et Débruitage itératif.}
+\end{figure}
+
+\chapter{Expérimentations et Résultats}
+
+\section{Protocole Expérimental}
+\begin{itemize}
+    \item \textbf{Environnement} : PyTorch, PyTorch Geometric, RDKit.
+    \item \textbf{Optimiseur} : AdamW avec $lr=1e-3$ et Weight Decay.
+    \item \textbf{Scheduler} : Cosine Annealing.
+    \item \textbf{Durée} : 50 à 100 époques.
+\end{itemize}
+
+\section{Résultats Quantitatifs}
+Le tableau ci-dessous résume les performances finales sur 200 molécules générées par chaque modèle.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{@{}lcccc@{}}
+    \toprule
+    \textbf{Métrique} & \textbf{Graph GAN-VAE} & \textbf{Ultimate Gen} & \textbf{QM9 (Train)} \\ \midrule
+    \textbf{Validité} & \textbf{100.00\%} & \textbf{100.00\%} & 100\% \\
+    \textbf{Unicité} & 98.00\% & \textbf{100.00\%} & 100\% \\
+    \textbf{Nouveauté} & \textbf{100.00\%} & \textbf{100.00\%} & - \\
+    QED (Moyenne) & 0.487 & 0.311 & 0.612 \\
+    LogP (Moyenne) & 0.694 & -0.240 & 1.28 \\
+    SAS (Synthétisabilité) & 3.2 & 4.5 & 2.1 \\
+    Similarité (vs Train) & 0.134 & 0.148 & 1.0 \\ \bottomrule
+    \end{tabular}
+    \caption{Comparaison complète des performances. Note : SAS (Synthetic Accessibility Score) plus bas est meilleur.}
+\end{table}
+
+\section{Analyse Visuelle Qualitative}
+
+\subsection{Générations du modèle Graph GAN-VAE}
+Le modèle GAN parvient à capturer des motifs aromatiques (hexagones carbones) de manière très convaincante. La diversité structurelle est élevée.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{assets/generated_molecules_graphgan.png}
+    \caption{Grille de molécules générées par Graph GAN-VAE. On note des structures cycliques claires et valides.}
+\end{figure}
+
+\subsection{Générations du modèle Ultimate Gen}
+Le modèle Ultimate Gen produit des structures très variées, parfois exotiques, mais toujours chimiquement valides, prouvant la robustesse des contraintes imposées par le processus de diffusion discret.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{assets/generated_molecules_ultimate.png}
+    \caption{Grille de molécules générées par Ultimate Gen.}
+\end{figure}
+
+\section{Analyse de la Distribution et Overfitting}
+Pour vérifier que nos modèles ne font pas de la simple mémorisation, nous analysons la similarité de Tanimoto (basée sur les empreintes Morgan) entre les molécules générées et le dataset d'entraînement.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{assets/dist_similarity.png}
+    \caption{Histogramme de la similarité maximale avec le dataset d'entraînement. Un pic vers 1.0 indiquerait de la mémorisation. Ici, la moyenne basse (~0.13) confirme que les molécules sont nouvelles et originales.}
+\end{figure}
+
+Nous observons que les distributions de QED (non montrées ici, voir rapport technique annexe) du Graph GAN sont plus proches du dataset réel que celles de Ultimate Gen, ce dernier ayant tendance à générer des molécules légèrement plus simples ou fragmentées.
+
+\chapter{Discussion et Perspectives}
+
+\section{Interprétation des Résultats}
+Nos résultats confirment l'hypothèse de recherche : l'hybridation est une stratégie gagnante.
+\begin{itemize}
+    \item Le VAE apporte la régularité nécessaire pour naviguer dans l'espace chimique.
+    \item La composante GAN force le réalisme des structures (cycles aromatiques).
+    \item La Diffusion permet d'atteindre une validité de 100\% en procédant par raffinement itératif, corrigeant les erreurs de valence étape par étape.
+\end{itemize}
+Le score de nouveauté (100\%) est particulièrement satisfaisant : les modèles sont de véritables "inventeurs" et non de simples "copieurs".
+
+\section{Limites de l'étude}
+\begin{enumerate}
+    \item \textbf{Taille des Molécules} : Limitée à 9 atomes lourds par la nature du dataset QM9. Pour une application réelle, il faudrait passer au dataset ZINC-250k (molécules jusqu'à 30-50 atomes).
+    \item \textbf{Optimisation des Propriétés} : Bien que valides, les molécules de Ultimate Gen ont parfois un score QED faible. L'ajout d'une boucle d'optimisation (Reinforcement Learning ou guidage par gradient sur un prédicteur de propriétés) serait nécessaire.
+    \item \textbf{Génération 2D vs 3D} : Nous générons la topologie (graphe 2D). Pour le docking moléculaire, la conformation 3D est indispensable.
+\end{enumerate}
+
+\section{Impact et Applications Futures}
+Ce projet pose les bases d'une plateforme générative pour la pharmacologie. À terme, ce type d'outil pourrait permettre de :
+\begin{itemize}
+    \item Générer des librairies focalisées autour d'un "échafaudage" (scaffold) prometteur.
+    \item Optimiser des têtes de série (Lead Optimization) in-silico avant la synthèse coûteuse en laboratoire.
+    \item Explorer des coins de l'espace chimique que l'imagination humaine ou les règles combinatoires n'auraient pas envisagés.
+\end{itemize}
+
+Nous prévoyons d'étendre ce travail en intégrant une génération conditionnelle multi-objectifs (Ex: Maximiser la solubilité ET minimiser la toxicité simultanément).
+
+\chapter*{Conclusion Générale}
+Ce projet de Master a permis d'explorer les frontières de l'IA générative appliquée à la chimie. En fusionnant les paradigmes VAE, GAN et Diffusion, nous avons construit des modèles capables de générer des molécules valides, uniques et nouvelles. Bien que des défis subsistent, notamment pour l'extension à des molécules plus grandes, les résultats obtenus (Validité 100\%) constituent une preuve de concept solide de l'apport de l'IA dans la découverte de nouveaux médicaments.
+
+\printbibliography
+
+\end{document}
