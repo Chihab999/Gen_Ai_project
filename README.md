@@ -54,7 +54,7 @@ Notre modèle le plus avancé combinant :
 
 ### Installation
 ```bash
-git clone https://github.com/votre-username/drug-discovery-genai.git
+git clone https://github.com/chihab999/drug-discovery-genai.git
 cd drug-discovery-genai
 pip install -r requirements.txt
 ```
@@ -83,8 +83,8 @@ Nous avons évalué nos modèles sur le dataset QM9.
 ## 👥 Équipe
 
 Ce travail a été réalisé dans le cadre du Master Data Science et IA.
-*   **Chihab Ouchen** (chihab.ouchen@gmail.com)
-*   **Ahmed Ouidani** (ahmed.ouidani@gmail.com)
+*   **Chihab Ouchen** (chihabouchen11@gmail.com)
+*   **Ahmed Ouidani** (A.ouidani9533@uca.ac.ma)
 
 ---
 *Faculté Polydisciplinaire de Safi - 2026*
