@@ -54,7 +54,7 @@ Notre modèle le plus avancé combinant :
 
 ### Installation
 ```bash
-git clone https://github.com/chihab999/drug-discovery-genai.git
+git clone https://github.com/chihab999/Gen_Ai_project.git
 cd drug-discovery-genai
 pip install -r requirements.txt
 ```
